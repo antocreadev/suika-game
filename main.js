@@ -30,11 +30,11 @@ const wallRight = Bodies.rectangle(window.innerWidth, window.innerHeight/2, 10, 
 const fakeFruit = Bodies.circle(window.innerWidth/2, 20, 10, { isSleeping : true, render : { fillStyle : '#932' }});
 
 
-window.addEventListener('mousemove', (event) => {
-
-  console.log("mousemove", event.clientX)
-  // fakeFruit.position.x = event.clientX;
-});
+// // for mouse version 
+// window.addEventListener('mousemove', (event) => {
+//   console.log("mousemove", event.clientX)
+//   // fakeFruit.position.x = event.clientX;
+// });
 
 // window.addEventListener('mousedown', (event) => {
 //   // remove fake fruit
@@ -44,28 +44,23 @@ window.addEventListener('mousemove', (event) => {
 //   Sleeping.set(currentFruit, false);
 // });
 
-
-
-
 window.addEventListener('touchmove', function(event) {
   if (event.touches.length > 0) {
-      // Accéder à la coordonnée X du premier doigt touchant l'écran
-      var clientX = event.touches[0].clientX;
+      // console.log("touchmove", event.touches[0].clientX)
+      fakeFruit.position.x = event.touches[0].clientX;
 
-      // Faites quelque chose avec la coordonnée X
-      console.log('Coordonnée X : ' + clientX);
-      // fakeFruit.position.x = event.clientX;
+
   }
 });
 
-// window.addEventListener('touchend', (event) => {
-//   console.log("touchend", event.touches[0].clientX)
-//   // remove fake fruit
-//   Composite.remove(engine.world, fakeFruit);
-//   const currentFruit = Bodies.circle(event.clientX, 20, 10, { isSleeping : true, render : { fillStyle : '#932' }});
-//   Composite.add(engine.world, [currentFruit]);
-//   Sleeping.set(currentFruit, false);
-// });
+window.addEventListener('touchend', (event) => {
+  // console.log("touchend", event.changedTouches[0].clientX)
+  // remove fake fruit
+  Composite.remove(engine.world, fakeFruit);
+  const currentFruit = Bodies.circle(event.changedTouches[0].clientX, 20, 10, { isSleeping : true, render : { fillStyle : '#932' }});
+  Composite.add(engine.world, [currentFruit]);
+  Sleeping.set(currentFruit, false);
+});
 
 
 
