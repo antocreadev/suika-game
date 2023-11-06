@@ -7,7 +7,7 @@ export const FRUITS = [
     {
       label: "strawberry",
       radius: 50 / 2,
-      color: "#FF624C",
+      color: "#140",
     },
     {
       label: "grape",
@@ -17,7 +17,7 @@ export const FRUITS = [
     {
       label: "kumkwat",
       radius: 85 / 2,
-      color: "#FFAF02",
+      color: "#AA2",
     },
     {
       label: "orange",
@@ -27,7 +27,7 @@ export const FRUITS = [
     {
       label: "apple",
       radius: 140 / 2,
-      color: "#F41615",
+      color: "#F3F",
     },
     {
       label: "pear",
@@ -37,12 +37,12 @@ export const FRUITS = [
     {
       label: "peach",
       radius: 196 / 2,
-      color: "#FEB6AC",
+      color: "#FEB",
     },
     {
       label: "pineapple",
       radius: 220 / 2,
-      color: "#F7E608",
+      color: "#0F0",
     },
     {
       label: "melon",
@@ -52,6 +52,6 @@ export const FRUITS = [
     {
       label: "watermelon",
       radius: 300 / 2,
-      color: "#26AA1E",
+      color: "#FFF",
     },
   ];

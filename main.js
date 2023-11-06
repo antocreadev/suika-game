@@ -1,4 +1,4 @@
-import { Engine, Render, Bodies, Composite, Runner, Sleeping } from "matter-js";
+import { Engine, Render, Bodies, Runner, Events, World } from "matter-js";
 import { FRUITS } from "./Fruits";
 
 // --- Constants
@@ -51,7 +51,7 @@ const wallRight = Bodies.rectangle(WIDTH, HEIGHT / 2, 10, HEIGHT, {
 const randomFakeFruit = randomFruit()
 const fakeFruit = Bodies.circle(WIDTH / 2, HEIGHT_DROP, randomFakeFruit.radius, {
   isSleeping: true,
-  render: { fillStyle: randomFakeFruit.color },
+  render: { fillStyle: randomFakeFruit.color ,sprite: { texture: `/${randomFakeFruit.label}.png` }, },
   label: randomFakeFruit.label,
 });
 
@@ -63,9 +63,9 @@ const fakeFruit = Bodies.circle(WIDTH / 2, HEIGHT_DROP, randomFakeFruit.radius, 
 // });
 // window.addEventListener('mousedown', (event) => {
 //   // remove fake fruit
-//   Composite.remove(engine.world, fakeFruit);
+//   World.remove(engine.world, fakeFruit);
 //   const currentFruit = Bodies.circle(event.clientX, 20, 10, { isSleeping : true, render : { fillStyle : '#932' }});
-//   Composite.add(engine.world, [currentFruit]);
+//   World.add(engine.world, [currentFruit]);
 //   Sleeping.set(currentFruit, false);
 // });
 
@@ -110,24 +110,30 @@ const dropFruit = () => {
           fakeFruit.circleRadius ,
           {
             restitution: RESTITUTION,
-            render: { fillStyle: fakeFruit.render.fillStyle },
+            render: { fillStyle: fakeFruit.render.fillStyle,sprite: { texture: `/${fakeFruit.label}.png` } },
             label : fakeFruit.label
           }
         );
         // - Generate other data for next fruit
-        const GeneratedFakeFruit = randomFruit()
+        
         // - change data in fakefruit 
+        let GeneratedFakeFruit = randomFruit()
+        // not have twice(two times) same value
+        while(GeneratedFakeFruit.label === fakeFruit.label){
+          GeneratedFakeFruit = randomFruit()
+        }
         fakeFruit.render.fillStyle = GeneratedFakeFruit.color
         fakeFruit.label = GeneratedFakeFruit.label
         fakeFruit.circleRadius = GeneratedFakeFruit.radius
+        fakeFruit.render.sprite.texture = `/${GeneratedFakeFruit.label}.png`
         // - play fruit (add in world)
-        Composite.add(engine.world, [currentFruit]);
+        World.add(engine.world, [currentFruit]);
         // - remove fakeFruit
-        Composite.remove(engine.world, fakeFruit);
+        World.remove(engine.world, fakeFruit);
 
         // - add fakeFruit after 1s
         setTimeout(() => {
-          Composite.add(engine.world, [fakeFruit]);
+          World.add(engine.world, [fakeFruit]);
           drop = true;
         }, DELAY);
       }
@@ -143,8 +149,45 @@ const addCurrentFruit = (x) => {
 };
 addCurrentFruit();
 
+// - functions for detect collison event 
+Events.on(engine, "collisionStart", (event) => {
+  event.pairs.forEach((pair) => {
+    const bodyA = pair.bodyA;
+    const bodyB = pair.bodyB;
+
+    if (bodyA.label === bodyB.label) {
+      // Vérifier si deux fruits avec le même label sont entrés en collision
+      World.remove(engine.world, bodyA);
+      World.remove (engine.world, bodyB);
+
+      // Calculer la position du nouveau "fruit level up"
+      const x = (bodyA.position.x + bodyB.position.x) / 2;
+      const y = (bodyA.position.y + bodyB.position.y) / 2;
+
+      const index = FRUITS.findIndex(
+        (fruit) => fruit.label === bodyA.label
+      );
+      console.log(index)
+      console.log(bodyA)
+      // If last fruit, do nothing
+      if (index === FRUITS.length - 1) return;
+      const newFruit = FRUITS[index + 1];
+      console.log(newFruit)
+      const fruitLevelUp = Bodies.circle(x, y, 100, {
+        render: { fillStyle: newFruit.color, sprite: { texture: `/${newFruit.label}.png` } },
+        label: newFruit.label,
+        restitution: RESTITUTION,
+        
+      });
+
+      World.add(engine.world, [fruitLevelUp]);
+    }
+  });
+});
+
+
 // --- Add items in the word
-Composite.add(engine.world, [ground, wallLeft, wallRight, fakeFruit]);
+World.add(engine.world, [ground, wallLeft, wallRight, fakeFruit]);
 
 // --- Render the world
 Render.run(render);
