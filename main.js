@@ -156,11 +156,11 @@ Events.on(engine, "collisionStart", (event) => {
     const bodyB = pair.bodyB;
 
     if (bodyA.label === bodyB.label) {
-      // Vérifier si deux fruits avec le même label sont entrés en collision
+      // collision between twen even fruit
       World.remove(engine.world, bodyA);
       World.remove (engine.world, bodyB);
 
-      // Calculer la position du nouveau "fruit level up"
+      // position on 
       const x = (bodyA.position.x + bodyB.position.x) / 2;
       const y = (bodyA.position.y + bodyB.position.y) / 2;
 
@@ -173,7 +173,7 @@ Events.on(engine, "collisionStart", (event) => {
       if (index === FRUITS.length - 1) return;
       const newFruit = FRUITS[index + 1];
       console.log(newFruit)
-      const fruitLevelUp = Bodies.circle(x, y, 100, {
+      const fruitLevelUp = Bodies.circle(x, y, newFruit.radius, {
         render: { fillStyle: newFruit.color, sprite: { texture: `/${newFruit.label}.png` } },
         label: newFruit.label,
         restitution: RESTITUTION,
