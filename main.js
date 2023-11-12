@@ -46,6 +46,13 @@ const wallRight = Bodies.rectangle(WIDTH, HEIGHT / 2, 10, HEIGHT, {
   render: { fillStyle: "#ffffff" },
   label: "wallRight",
 });
+// x, y, width, height
+const EndLine = Bodies.rectangle(WIDTH/2, HEIGHT/6 , WIDTH, HEIGHT/300, {
+  isStatic: true,
+  isSensor : true, 
+  render: { fillStyle: "#40f" },
+  label: "EndLine",
+});
 // - items
 // - generate fruit
 const randomFakeFruit = randomFruit()
@@ -155,6 +162,11 @@ Events.on(engine, "collisionStart", (event) => {
     const bodyA = pair.bodyA;
     const bodyB = pair.bodyB;
 
+    if (drop && bodyA.label==="EndLine" || bodyB.label==="EndLine"){
+      alert("Game Over")
+      location.reload()
+    }
+
     if (bodyA.label === bodyB.label) {
       // collision between twen even fruit
       World.remove(engine.world, bodyA);
@@ -187,7 +199,7 @@ Events.on(engine, "collisionStart", (event) => {
 
 
 // --- Add items in the word
-World.add(engine.world, [ground, wallLeft, wallRight, fakeFruit]);
+World.add(engine.world, [EndLine, ground, wallLeft, wallRight, fakeFruit]);
 
 // --- Render the world
 Render.run(render);
