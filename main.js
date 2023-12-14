@@ -106,7 +106,8 @@ const dropFruit = () => {
     if (event.changedTouches.length > 0) {
       // - update position fakefruit & get position x
       fakeFruit.position.x = event.changedTouches[0].clientX;
-      console.log(engine.world.bodies)
+      // - debug (log : all bodies in world)
+      // console.log(engine.world.bodies)
       // - if fakeFruit
       if (drop) {
         drop=false
@@ -179,12 +180,11 @@ Events.on(engine, "collisionStart", (event) => {
       const index = FRUITS.findIndex(
         (fruit) => fruit.label === bodyA.label
       );
-      console.log(index)
-      console.log(bodyA)
+      // console.log(index)
+      // console.log(bodyA)
       // If last fruit, do nothing
       if (index === FRUITS.length - 1) return;
       const newFruit = FRUITS[index + 1];
-      console.log(newFruit)
       const fruitLevelUp = Bodies.circle(x, y, newFruit.radius, {
         render: { fillStyle: newFruit.color, sprite: { texture: `/${newFruit.label}.png` } },
         label: newFruit.label,
@@ -196,7 +196,6 @@ Events.on(engine, "collisionStart", (event) => {
     }
   });
 });
-
 
 // --- Add items in the word
 World.add(engine.world, [EndLine, ground, wallLeft, wallRight, fakeFruit]);
